@@ -16,11 +16,6 @@ resource "google_compute_network" "vpc_network" {
   name = "minecraft-network"
 }
 
-data "google_compute_image" "base_image" {
-  family  = "ubuntu-2004-lts"
-  project = "ubuntu-os-cloud"
-}
-
 resource "google_compute_firewall" "allow_ssh" {
   name    = "allow-ssh"
   network = google_compute_network.vpc_network.name
@@ -38,20 +33,30 @@ resource "google_compute_firewall" "allow_icmp" {
   }
 }
 
+resource "google_compute_disk" "game_data_disk" {
+  name = "game-data-disk"
+  type = "pd-standard"
+  size = 30
+}
+
+data "google_compute_image" "base_image" {
+  family  = "ubuntu-2004-lts"
+  project = "ubuntu-os-cloud"
+}
+
 resource "google_compute_instance" "vm_instance" {
   name         = "minecraft-abekoh"
   machine_type = "e2-medium"
   tags         = ["minecraft"]
 
   boot_disk {
-    auto_delete = false
-    device_name = "minecraft-abekoh-disk"
-    mode        = "READ_WRITE"
-
     initialize_params {
       image = data.google_compute_image.base_image.self_link
-      size  = 30
     }
+  }
+
+  attached_disk {
+    source = google_compute_disk.game_data_disk.name
   }
 
   network_interface {
