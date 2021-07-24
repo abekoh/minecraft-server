@@ -21,6 +21,23 @@ data "google_compute_image" "base_image" {
   project = "ubuntu-os-cloud"
 }
 
+resource "google_compute_firewall" "allow_ssh" {
+  name    = "allow-ssh"
+  network = google_compute_network.vpc_network.name
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+}
+
+resource "google_compute_firewall" "allow_icmp" {
+  name    = "allow-icmp"
+  network = google_compute_network.vpc_network.name
+  allow {
+    protocol = "icmp"
+  }
+}
+
 resource "google_compute_instance" "vm_instance" {
   name         = "minecraft-abekoh"
   machine_type = "e2-medium"
@@ -44,7 +61,7 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   scheduling {
-    preemptible = true
+    preemptible       = true
     automatic_restart = false
   }
 }
