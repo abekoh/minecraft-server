@@ -33,6 +33,16 @@ resource "google_compute_firewall" "allow_icmp" {
   }
 }
 
+resource "google_compute_firewall" "allow_minecraft" {
+  name    = "allow-minecraft"
+  network = google_compute_network.vpc_network.name
+  allow {
+    protocol = "tcp"
+    ports = ["25565"]
+  }
+  target_tags = ["minecraft-server"]
+}
+
 resource "google_compute_disk" "game_data_disk" {
   name = "game-data-disk"
   type = "pd-standard"
@@ -47,7 +57,7 @@ data "google_compute_image" "base_image" {
 resource "google_compute_instance" "vm_instance" {
   name         = "minecraft-abekoh"
   machine_type = "e2-medium"
-  tags         = ["minecraft"]
+  tags         = ["minecraft-server"]
 
   boot_disk {
     initialize_params {
