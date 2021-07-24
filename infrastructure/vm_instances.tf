@@ -38,7 +38,7 @@ resource "google_compute_firewall" "allow_minecraft" {
   network = google_compute_network.vpc_network.name
   allow {
     protocol = "tcp"
-    ports = ["25565"]
+    ports    = ["25565"]
   }
   target_tags = ["minecraft-server"]
 }
