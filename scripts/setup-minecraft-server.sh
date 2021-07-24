@@ -6,7 +6,7 @@ apt-get install -y openjdk-16-jre-headless
 
 # setup permenent disk
 mkdir -p /mnt/disks/game-data
-mount -o discard,defaults /dev/sdb /mnt/disks/game-data
+mount -o discard,defaults UUID= /mnt/disks/game-data
 chmod a+w /mnt/disks/game-data
 
 # make symbolic link

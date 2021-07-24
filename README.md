@@ -9,7 +9,7 @@ See: https://cloud.google.com/compute/docs/disks/add-persistent-disk
 ```bash
 sudo mkfs.ext4 -m 0 -E lazy_itable_init=0,lazy_journal_init=0,discard /dev/sdb
 sudo mkdir -p /mnt/disks/game-data
-sudo mount -o discard,defaults /dev/sdb /mnt/disks/game-data
+sudo mount -o discard,defaults UUID=bc7783d6-280f-4214-930d-3d8a172fccbc /mnt/disks/game-data
 sudo chmod a+w /mnt/disks/game-data
 ```
 

@@ -79,4 +79,8 @@ resource "google_compute_instance" "vm_instance" {
     preemptible       = true
     automatic_restart = false
   }
+
+  metadata = {
+    startup-script-url = "gs://minecraft-abekoh-scripts/setup-minecraft-server.sh"
+  }
 }
