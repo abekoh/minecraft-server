@@ -3,9 +3,9 @@ variable "project" { }
 variable "credentials_file" { }
 
 variable "region" {
-  default = "asia-northeast3"
+  default = "asia-northeast1"
 }
 
 variable "zone" {
-  default = "asia-northeast3-b"
+  default = "asia-northeast1-b"
 }
