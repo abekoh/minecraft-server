@@ -23,6 +23,7 @@ resource "google_compute_firewall" "allow_ssh" {
     protocol = "tcp"
     ports    = ["22"]
   }
+  priority = 9000
 }
 
 resource "google_compute_firewall" "allow_icmp" {
@@ -31,6 +32,7 @@ resource "google_compute_firewall" "allow_icmp" {
   allow {
     protocol = "icmp"
   }
+  priority = 8000
 }
 
 resource "google_compute_firewall" "allow_minecraft" {
@@ -41,6 +43,7 @@ resource "google_compute_firewall" "allow_minecraft" {
     ports    = ["25565"]
   }
   target_tags = ["minecraft-server"]
+  priority = 1000
 }
 
 resource "google_compute_disk" "game_data_disk" {

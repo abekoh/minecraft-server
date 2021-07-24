@@ -10,4 +10,4 @@ mount -o discard,defaults UUID=bc7783d6-280f-4214-930d-3d8a172fccbc /mnt/disks/g
 chmod a+w /mnt/disks/game-data
 
 # run minecraft
-nohup java -Xmx2048M -Xms2048M -jar /mnt/disks/game-data/minecraft-java/server.jar nogui &
+screen -d -m -S minecraft java -Xmx2048M -Xms2048M -jar /mnt/disks/game-data/minecraft-java/server.jar nogui
