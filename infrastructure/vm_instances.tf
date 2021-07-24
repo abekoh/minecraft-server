@@ -80,7 +80,13 @@ resource "google_compute_instance" "vm_instance" {
     automatic_restart = false
   }
 
+  service_account {
+    email  = "minecraft-server@minecraft-abekoh.iam.gserviceaccount.com"
+    scopes = ["cloud-platform"]
+  }
+
   metadata = {
     startup-script-url = "gs://minecraft-abekoh-scripts/setup-minecraft-server.sh"
   }
+
 }
