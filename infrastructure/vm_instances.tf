@@ -42,8 +42,9 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   metadata = {
-    startup-script-url = "gs://minecraft-abekoh-scripts/setup-minecraft-server.sh"
-    enable-oslogin     = "TRUE"
+    startup-script-url  = "gs://minecraft-abekoh-scripts/setup-minecraft-server.sh"
+    shutdown-script-url = "gs://minecraft-abekoh-scripts/shutdown-minecraft-server.sh"
+    enable-oslogin      = "TRUE"
   }
 
 }
