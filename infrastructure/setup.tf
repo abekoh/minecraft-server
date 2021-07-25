@@ -3,6 +3,9 @@ terraform {
   required_providers {
     google = "3.76.0"
   }
+  backend "gcs" {
+    bucket = "minecraft-abekoh-terraform"
+  }
 }
 
 provider "google" {

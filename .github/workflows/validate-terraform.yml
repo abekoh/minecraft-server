@@ -7,6 +7,11 @@ defaults:
   run:
     working-directory: "infrastructure"
 jobs:
+  env:
+    GOOGLE_APPLICATION_CREDENTIALS: /tmp/serviceaccount.json
+    GCP_CRED_BASE64: ${{ secrets.GCP_CRED_BASE64 }}
+    GCP_PROJECT: minecraft-abekoh
+    GCP_VM_SERVICEACCOUNT_EMAIL: ${{ secrets.GCP_VM_SERVICEACCOUNT_EMAIL }}
   check-terraform:
     runs-on: ubuntu-latest
     steps:
@@ -14,9 +19,8 @@ jobs:
       - uses: hashicorp/setup-terraform@v1
       - name: Setup GCP Credential
         id: gcp-cred
-        run: echo $GCP_CRED_BASE64 | base64 --decode > /tmp/serviceaccount.json
+        run: echo $GCP_CRED_BASE64 | base64 --decode > $GOOGLE_APPLICATION_CREDENTIALS
         env:
-          GCP_CRED_BASE64: ${{ secrets.GCP_CRED_BASE64 }}
       - name: Terraform fmt
         id: fmt
         run: terraform fmt -check
@@ -32,13 +36,9 @@ jobs:
         run: >
           terraform plan -no-color
           -var "project=$GCP_PROJECT"
-          -var "credentials_file=$GCP_CRED_PATH"
+          -var "credentials_file=$GOOGLE_APPLICATION_CREDENTIALS"
           -var "vm_serviceaccount_email=$GCP_VM_SERVICEACCOUNT_EMAIL"
         continue-on-error: true
-        env:
-          GCP_PROJECT: minecraft-abekoh
-          GCP_CRED_PATH: /tmp/serviceaccount.json
-          GCP_VM_SERVICEACCOUNT_EMAIL: ${{ secrets.GCP_VM_SERVICEACCOUNT_EMAIL }}
       - uses: actions/github-script@0.9.0
         if: github.event_name == 'pull_request'
         env:
