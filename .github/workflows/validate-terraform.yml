@@ -20,7 +20,6 @@ jobs:
       - name: Setup GCP Credential
         id: gcp-cred
         run: echo $GCP_CRED_BASE64 | base64 --decode > $GOOGLE_APPLICATION_CREDENTIALS
-        env:
       - name: Terraform fmt
         id: fmt
         run: terraform fmt -check
