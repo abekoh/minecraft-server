@@ -12,7 +12,7 @@ jobs:
     env:
       GOOGLE_APPLICATION_CREDENTIALS: /tmp/serviceaccount.json
       GCP_CRED_BASE64: ${{ secrets.GCP_CRED_BASE64 }}
-      GCP_PROJECT: minecraft-abekoh
+      GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
       GCP_VM_SERVICEACCOUNT_EMAIL: ${{ secrets.GCP_VM_SERVICEACCOUNT_EMAIL }}
     steps:
       - uses: actions/checkout@v2
