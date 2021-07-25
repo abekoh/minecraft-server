@@ -9,6 +9,11 @@ defaults:
 steps:
   - uses: actions/checkout@v2
   - uses: hashicorp/setup-terraform@v1
+  - name: Setup GCP Credential
+    id: gcp-cred
+    run: base64 --decode $GCP_CRED_BASE64 > /tmp/serviceaccount.json
+    env:
+      GCP_CRED_BASE64: ${{ secrets.GCP_CRED_BASE64 }}
   - name: Terraform fmt
     id: fmt
     run: terraform fmt -check
@@ -18,8 +23,16 @@ steps:
     run: terraform validate -no-color
   - name: Terraform Plan
     id: plan
-    run: terraform plan -no-color
+    run: >
+      terraform plan -no-color
+      -var "project=$GCP_PROJECT"
+      -var "credentials_file=$GCP_CRED_PATH"
+      -var "vm_serviceaccount_email=$GCP_VM_SERVICEACCOUNT_EMAIL"
     continue-on-error: true
+    env:
+      GCP_PROJECT: minecraft-abekoh
+      GCP_CRED_PATH: /tmp/serviceaccount.json
+      GCP_VM_SERVICEACCOUNT_EMAIL: ${{ secrets.GCP_VM_SERVICEACCOUNT_EMAIL }}
   - uses: actions/github-script@0.9.0
     if: github.event_name == 'pull_request'
     env:
