@@ -14,7 +14,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v1
       - name: Setup GCP Credential
         id: gcp-cred
-        run: base64 --decode $GCP_CRED_BASE64 > /tmp/serviceaccount.json
+        run: echo $GCP_CRED_BASE64 | base64 --decode > /tmp/serviceaccount.json
         env:
           GCP_CRED_BASE64: ${{ secrets.GCP_CRED_BASE64 }}
       - name: Terraform fmt
