@@ -65,3 +65,6 @@ jobs:
               repo: context.repo.repo,
               body: output
             })
+      - name: Remove Credential
+        if: ${{ always() }}
+        run: rm -rf $GOOGLE_APPLICATION_CREDENTIALS

@@ -30,3 +30,6 @@ jobs:
           -var "project=$GCP_PROJECT"
           -var "credentials_file=$GOOGLE_APPLICATION_CREDENTIALS"
           -var "vm_serviceaccount_email=$GCP_VM_SERVICEACCOUNT_EMAIL"
+      - name: Remove Credential
+        if: ${{ always() }}
+        run: rm -rf $GOOGLE_APPLICATION_CREDENTIALS
