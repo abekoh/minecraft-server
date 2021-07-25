@@ -15,7 +15,17 @@ sudo chmod a+w /mnt/disks/game-data
 
 ### Minecraft のセットアップ
 
-永続ディスクの`/game-data/minecraft-java`内に`server.jar`など設置
+Spigot を永続ディスク`/game-data/spigot`に構築
+
+See: https://www.spigotmc.org/wiki/buildtools/
+
+```
+wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
+java -jar BuildTools.jar --rev 1.17.1
+touch start-server.sh
+// scripts/start-server.shをコピー
+chmod +x start-server.sh
+```
 
 ### 起動スクリプト設置
 
