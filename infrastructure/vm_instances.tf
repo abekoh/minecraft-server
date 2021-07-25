@@ -43,7 +43,7 @@ resource "google_compute_firewall" "allow_minecraft" {
     ports    = ["25565"]
   }
   target_tags = ["minecraft-server"]
-  priority = 1000
+  priority    = 1000
 }
 
 resource "google_compute_disk" "game_data_disk" {
@@ -90,6 +90,7 @@ resource "google_compute_instance" "vm_instance" {
 
   metadata = {
     startup-script-url = "gs://minecraft-abekoh-scripts/setup-minecraft-server.sh"
+    enable-oslogin     = "TRUE"
   }
 
 }
