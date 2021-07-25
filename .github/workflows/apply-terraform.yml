@@ -1,0 +1,32 @@
+name: apply Terraform
+on:
+  push:
+    branches:
+      - main
+defaults:
+  run:
+    working-directory: "infrastructure"
+jobs:
+  apply-terraform:
+    runs-on: ubuntu-latest
+    env:
+      GOOGLE_APPLICATION_CREDENTIALS: /tmp/serviceaccount.json
+      GCP_CRED_BASE64: ${{ secrets.GCP_CRED_BASE64 }}
+      GCP_PROJECT: minecraft-abekoh
+      GCP_VM_SERVICEACCOUNT_EMAIL: ${{ secrets.GCP_VM_SERVICEACCOUNT_EMAIL }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+      - name: Setup GCP Credential
+        id: gcp-cred
+        run: echo $GCP_CRED_BASE64 | base64 --decode > $GOOGLE_APPLICATION_CREDENTIALS
+      - name: Terraform Init
+        id: init
+        run: terraform init
+      - name: Terraform Apply
+        id: apply
+        run: >
+          terraform apply -auto-approve -no-color
+          -var "project=$GCP_PROJECT"
+          -var "credentials_file=$GOOGLE_APPLICATION_CREDENTIALS"
+          -var "vm_serviceaccount_email=$GCP_VM_SERVICEACCOUNT_EMAIL"
