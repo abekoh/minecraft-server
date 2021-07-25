@@ -9,3 +9,5 @@ variable "region" {
 variable "zone" {
   default = "asia-northeast1-b"
 }
+
+variable "vm_serviceaccount_email" {}

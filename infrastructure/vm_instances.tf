@@ -37,7 +37,7 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   service_account {
-    email  = "minecraft-server@minecraft-abekoh.iam.gserviceaccount.com"
+    email  = var.vm_serviceaccount_email
     scopes = ["cloud-platform"]
   }
 
