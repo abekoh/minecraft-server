@@ -16,6 +16,10 @@ resource "google_compute_network" "vpc_network" {
   name = "minecraft-network"
 }
 
+resource "google_compute_address" "static_ip" {
+  name = "minecraft-server-static-ip"
+}
+
 resource "google_compute_firewall" "allow_ssh" {
   name    = "allow-ssh"
   network = google_compute_network.vpc_network.name
@@ -75,6 +79,7 @@ resource "google_compute_instance" "vm_instance" {
   network_interface {
     network = google_compute_network.vpc_network.name
     access_config {
+      nat_ip = google_compute_address.static_ip.address
     }
   }
 
