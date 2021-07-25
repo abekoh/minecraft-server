@@ -19,7 +19,19 @@ Spigot を永続ディスク`/game-data/spigot`に構築
 
 See: https://www.spigotmc.org/wiki/buildtools/
 
-```
+```bash
 wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
 java -jar BuildTools.jar --rev 1.17.1
+```
+
+### Ops エージェント設定
+
+Terraform の設定は少しめんどそうだったのでとりあえず手動で。
+
+See: https://cloud.google.com/logging/docs/agent/ops-agent/installation
+
+```bash
+curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
+sudo bash add-google-cloud-ops-agent-repo.sh --also-install
+rm add-google-cloud-ops-agent-repo.sh
 ```
