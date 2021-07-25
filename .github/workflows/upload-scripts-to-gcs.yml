@@ -15,4 +15,4 @@ jobs:
           export_default_credentials: true
       - name: upload to gcs
         id: upload-gcs
-        run: gsutil cp scripts/setup-minecraft-server.sh gs://minecraft-abekoh-scripts/
+        run: gsutil cp scripts/* gs://minecraft-abekoh-scripts/
