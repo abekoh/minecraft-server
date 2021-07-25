@@ -32,3 +32,4 @@ chmod +x start-server.sh
 ```bash
 gsutil cp scripts/setup-minecraft-server.sh gs://minecraft-abekoh-scripts/
 ```
+c
