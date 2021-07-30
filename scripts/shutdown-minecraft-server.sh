@@ -1,4 +1,5 @@
 #!/bin/bash -e
 
 # shutdown minecraft
-sudo screen -r minecraft -X stuff '/stop\n'
+screen -r minecraft -X stuff 'stop\n'
+sleep 30
