@@ -2,4 +2,4 @@
 
 # shutdown minecraft
 screen -r minecraft -X stuff 'stop\n'
-sleep 30
+sleep 10
