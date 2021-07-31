@@ -44,7 +44,7 @@ func newMinecraftServerDiscordOperator(botToken string, botClientId string, serv
 	if len(botClientId) == 0 {
 		return MinecraftServerDiscordOperator{}, fmt.Errorf("bot client-id is not defined")
 	}
-	discord, err := discordgo.New()
+	discord, err := discordgo.New(botToken)
 	if err != nil {
 		return MinecraftServerDiscordOperator{}, err
 	}
