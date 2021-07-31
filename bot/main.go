@@ -136,7 +136,7 @@ func (gceo GoogleComputeEngineOperator) wakeup() error {
 		return fmt.Errorf("failed to get instance: %v", err)
 	}
 	if instance.Status != "TERMINATED" && instance.Status != "STOPPED" && instance.Status != "SUSPENDED" {
-		return
+		return fmt.Errorf("instance's status is not TERMINATED/STOPPED/SUSPENDED")
 	}
 	_, err = gceo.service.Instances.Start(gceo.project, gceo.zone, gceo.instanceName).Do()
 	if err != nil {
