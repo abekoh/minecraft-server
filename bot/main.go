@@ -5,15 +5,13 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"os/signal"
 	"regexp"
 	"strings"
+	"syscall"
 
 	"github.com/bwmarrin/discordgo"
 	compute "google.golang.org/api/compute/v1"
-)
-
-var (
-	stopBot = make(chan bool)
 )
 
 func main() {
@@ -39,9 +37,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer discordOperator.close()
-	fmt.Println("Listening...")
-	<-stopBot
+	fmt.Println("Bot is now running.  Press CTRL-C to exit.")
+	sc := make(chan os.Signal, 1)
+	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
+	<-sc
+
+	discordOperator.close()
 }
 
 type DiscordOperator interface {
@@ -70,18 +71,22 @@ func newMinecraftServerDiscordOperator(botToken string, serverOperator ServerOpe
 		if strings.Contains(message, "wakeup") {
 			err := serverOperator.wakeup()
 			if err != nil {
-				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("<@%s> failed to wakeup: %v", m.Author.ID, err))
+				_, err = s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("<@%s> failed to wakeup: %v", m.Author.ID, err))
+				fmt.Println(err)
 			} else {
-				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("<@%s> succeeded to wakeup server!", m.Author.ID))
+				_, err = s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("<@%s> succeeded to wakeup server!", m.Author.ID))
+				fmt.Println(err)
 			}
 			return
 		}
 		if strings.Contains(message, "shutdown") {
 			err := serverOperator.shutdown()
 			if err != nil {
-				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("<@%s> failed to shutdown: %v", m.Author.ID, err))
+				_, err = s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("<@%s> failed to shutdown: %v", m.Author.ID, err))
+				fmt.Println(err)
 			} else {
-				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("<@%s> succeeded to shutdown server!", m.Author.ID))
+				_, err = s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("<@%s> succeeded to shutdown server!", m.Author.ID))
+				fmt.Println(err)
 			}
 			return
 		}
@@ -113,10 +118,6 @@ type GoogleComputeEngineOperator struct {
 
 func newGoogleComputeEngineOperator(project string, zone string, instanceName string) (GoogleComputeEngineOperator, error) {
 	ctx := context.Background()
-	// client, err := google.DefaultClient(ctx, compute.ComputeScope)
-	// if err != nil {
-	// 	return GoogleComputeEngineOperator{}, err
-	// }
 	service, err := compute.NewService(ctx)
 	if err != nil {
 		return GoogleComputeEngineOperator{}, err
