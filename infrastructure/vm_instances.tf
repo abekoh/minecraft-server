@@ -48,3 +48,32 @@ resource "google_compute_instance" "vm_instance" {
   }
 
 }
+
+
+resource "google_compute_instance" "bot_instance" {
+  name         = "minecraft-abekoh-discord-bot"
+  machine_type = "f1-micro"
+
+  boot_disk {
+    initialize_params {
+      image = data.google_compute_image.base_image.self_link
+    }
+  }
+
+  network_interface {
+    network = google_compute_network.vpc_network.name
+    access_config {
+    }
+  }
+
+  service_account {
+    email  = var.vm_serviceaccount_email
+    scopes = ["cloud-platform"]
+  }
+
+  metadata = {
+    startup-script-url = "gs://minecraft-abekoh-scripts/setup-discord-bot-server.sh"
+    enable-oslogin     = "TRUE"
+  }
+
+}
