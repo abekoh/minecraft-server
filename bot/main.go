@@ -54,10 +54,10 @@ func newMinecraftServerDiscordOperator(botToken string, botClientId string, serv
 		if len(message) == 0 {
 			return
 		}
-		if strings.Contains(message, "start") {
+		if strings.Contains(message, "wakeup") {
 			serverOperator.start()
 		}
-		if strings.Contains(message, "stop") {
+		if strings.Contains(message, "shutdown") {
 			serverOperator.stop()
 		}
 	})
