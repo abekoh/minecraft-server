@@ -29,7 +29,6 @@ func main() {
 
 	discordOperator, err := newMinecraftServerDiscordOperator(
 		os.Getenv("DISCORD_TOKEN"),
-		os.Getenv("DISCORD_BOT_CLIENT_ID"),
 		computeEngineOperator,
 	)
 	if err != nil {
@@ -54,19 +53,16 @@ type MinecraftServerDiscordOperator struct {
 	discordSession *discordgo.Session
 }
 
-func newMinecraftServerDiscordOperator(botToken string, botClientId string, serverOperator ServerOperator) (MinecraftServerDiscordOperator, error) {
+func newMinecraftServerDiscordOperator(botToken string, serverOperator ServerOperator) (MinecraftServerDiscordOperator, error) {
 	if len(botToken) == 0 {
 		return MinecraftServerDiscordOperator{}, fmt.Errorf("token is not defined")
-	}
-	if len(botClientId) == 0 {
-		return MinecraftServerDiscordOperator{}, fmt.Errorf("bot client-id is not defined")
 	}
 	discord, err := discordgo.New(botToken)
 	if err != nil {
 		return MinecraftServerDiscordOperator{}, err
 	}
 	discord.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
-		botMentionPattern := regexp.MustCompile(fmt.Sprintf("<@%s> (.*)", botClientId))
+		botMentionPattern := regexp.MustCompile(fmt.Sprintf("<@%s> (.*)", s.State.User.ID))
 		message := botMentionPattern.ReplaceAllString(m.Content, "$1")
 		if len(message) == 0 {
 			return
@@ -87,6 +83,7 @@ func newMinecraftServerDiscordOperator(botToken string, botClientId string, serv
 			} else {
 				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("failed to shutdown: %v", err))
 			}
+			return
 		}
 	})
 	return MinecraftServerDiscordOperator{
