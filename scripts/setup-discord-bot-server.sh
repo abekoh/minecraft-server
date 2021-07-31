@@ -10,4 +10,6 @@ export PATH=$PATH:$HOME/bin
 gsutil cp gs://minecraft-abekoh-bot/bot $HOME/bin/bot
 chmod +x $HOME/bin/bot
 
+export DISCORD_TOKEN=$(gcloud secrets versions access latest --secret="discord-bot-token")
+
 screen -d -m -S discord-bot bot -project minecraft-abekoh -zone asia-northeast1-b -name minecraft-abekoh
