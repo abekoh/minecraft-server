@@ -1,4 +1,4 @@
-module bot
+module github.com/abekoh/minecraft-server/bot
 
 go 1.16
 
