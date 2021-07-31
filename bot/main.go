@@ -83,7 +83,12 @@ func newMinecraftServerDiscordOperator(botToken string, botClientId string, serv
 			return
 		}
 		if strings.Contains(message, "shutdown") {
-			serverOperator.shutdown()
+			err := serverOperator.shutdown()
+			if err == nil {
+				s.ChannelMessageSend(m.ChannelID, "succeeded to shutdown server!")
+			} else {
+				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("failed to shutdown: %v", err))
+			}
 		}
 	})
 	return MinecraftServerDiscordOperator{
@@ -147,5 +152,18 @@ func (gceo GoogleComputeEngineOperator) wakeup() error {
 }
 
 func (gceo GoogleComputeEngineOperator) shutdown() error {
-	fmt.Print("stop server")
+	fmt.Println("shutdowning server...")
+	instance, err := gceo.service.Instances.Get(gceo.project, gceo.zone, gceo.instanceName).Do()
+	if err != nil {
+		return fmt.Errorf("failed to get instance: %v", err)
+	}
+	if instance.Status != "RUNNING" {
+		return fmt.Errorf("instance's status is not RUNNING")
+	}
+	_, err = gceo.service.Instances.Stop(gceo.project, gceo.zone, gceo.instanceName).Do()
+	if err != nil {
+		return fmt.Errorf("failed to stop instance: %v", err)
+	}
+	fmt.Println("succeded to shutdown server!")
+	return nil
 }
