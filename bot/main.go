@@ -69,19 +69,19 @@ func newMinecraftServerDiscordOperator(botToken string, serverOperator ServerOpe
 		}
 		if strings.Contains(message, "wakeup") {
 			err := serverOperator.wakeup()
-			if err == nil {
-				s.ChannelMessageSend(m.ChannelID, "succeeded to wakeup server!")
+			if err != nil {
+				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("<@%s> failed to wakeup: %v", m.Author.ID, err))
 			} else {
-				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("failed to wakeup: %v", err))
+				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("<@%s> succeeded to wakeup server!", m.Author.ID))
 			}
 			return
 		}
 		if strings.Contains(message, "shutdown") {
 			err := serverOperator.shutdown()
-			if err == nil {
-				s.ChannelMessageSend(m.ChannelID, "succeeded to shutdown server!")
+			if err != nil {
+				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("<@%s> failed to shutdown: %v", m.Author.ID, err))
 			} else {
-				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("failed to shutdown: %v", err))
+				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("<@%s> succeeded to shutdown server!", m.Author.ID))
 			}
 			return
 		}
