@@ -53,6 +53,7 @@ resource "google_compute_instance" "vm_instance" {
 resource "google_compute_instance" "bot_instance" {
   name         = "minecraft-abekoh-discord-bot"
   machine_type = "f1-micro"
+  zone         = "us-central1-b"
 
   boot_disk {
     initialize_params {
@@ -62,6 +63,8 @@ resource "google_compute_instance" "bot_instance" {
 
   network_interface {
     network = google_compute_network.vpc_network.name
+    access_config {
+    }
   }
 
   service_account {
