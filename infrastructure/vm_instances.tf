@@ -72,8 +72,8 @@ resource "google_compute_instance" "bot_instance" {
   }
 
   metadata = {
-    startup-script-url  = "gs://minecraft-abekoh-scripts/setup-discord-bot-server.sh"
-    enable-oslogin      = "TRUE"
+    startup-script-url = "gs://minecraft-abekoh-scripts/setup-discord-bot-server.sh"
+    enable-oslogin     = "TRUE"
   }
 
 }
