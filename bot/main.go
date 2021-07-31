@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
-	"golang.org/x/oauth2/google"
 	compute "google.golang.org/api/compute/v1"
 )
 
@@ -117,11 +116,11 @@ type GoogleComputeEngineOperator struct {
 
 func newGoogleComputeEngineOperator(project string, zone string, instanceName string) (GoogleComputeEngineOperator, error) {
 	ctx := context.Background()
-	client, err := google.DefaultClient(ctx, compute.ComputeScope)
-	if err != nil {
-		return GoogleComputeEngineOperator{}, err
-	}
-	service, err := compute.New(client)
+	// client, err := google.DefaultClient(ctx, compute.ComputeScope)
+	// if err != nil {
+	// 	return GoogleComputeEngineOperator{}, err
+	// }
+	service, err := compute.NewService(ctx)
 	if err != nil {
 		return GoogleComputeEngineOperator{}, err
 	}
