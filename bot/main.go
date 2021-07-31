@@ -74,7 +74,13 @@ func newMinecraftServerDiscordOperator(botToken string, botClientId string, serv
 			return
 		}
 		if strings.Contains(message, "wakeup") {
-			serverOperator.wakeup()
+			err := serverOperator.wakeup()
+			if err == nil {
+				s.ChannelMessageSend(m.ChannelID, "succeeded to wakeup server!")
+			} else {
+				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("failed to wakeup: %v", err))
+			}
+			return
 		}
 		if strings.Contains(message, "shutdown") {
 			serverOperator.shutdown()
@@ -94,8 +100,8 @@ func (msdo MinecraftServerDiscordOperator) close() error {
 }
 
 type ServerOperator interface {
-	wakeup()
-	shutdown()
+	wakeup() error
+	shutdown() error
 }
 
 type GoogleComputeEngineOperator struct {
@@ -123,22 +129,23 @@ func newGoogleComputeEngineOperator(creadentialFilePath string, project string, 
 	}, nil
 }
 
-func (gceo GoogleComputeEngineOperator) wakeup() {
+func (gceo GoogleComputeEngineOperator) wakeup() error {
 	fmt.Println("wake-upping server...")
 	instance, err := gceo.service.Instances.Get(gceo.project, gceo.zone, gceo.instanceName).Do()
 	if err != nil {
-		fmt.Println("failed to get instance: %v", err)
+		return fmt.Errorf("failed to get instance: %v", err)
 	}
 	if instance.Status != "TERMINATED" && instance.Status != "STOPPED" && instance.Status != "SUSPENDED" {
 		return
 	}
 	_, err = gceo.service.Instances.Start(gceo.project, gceo.zone, gceo.instanceName).Do()
 	if err != nil {
-		fmt.Println("failed to start instance: %v", err)
+		return fmt.Errorf("failed to start instance: %v", err)
 	}
 	fmt.Println("succeded to wake-up server!")
+	return nil
 }
 
-func (gceo GoogleComputeEngineOperator) shutdown() {
+func (gceo GoogleComputeEngineOperator) shutdown() error {
 	fmt.Print("stop server")
 }
