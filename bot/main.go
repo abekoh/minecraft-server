@@ -18,13 +18,12 @@ var (
 )
 
 func main() {
-	var project, zone, instanceName, credPath string
+	var project, zone, instanceName string
 	flag.StringVar(&project, "project", "", "GCP project")
 	flag.StringVar(&zone, "zone", "", "GCP zone")
 	flag.StringVar(&instanceName, "name", "", "GCP instance name")
-	flag.StringVar(&credPath, "serviceaccount", "", "GCP service account secret path")
 	flag.Parse()
-	computeEngineOperator, err := newGoogleComputeEngineOperator(credPath, project, zone, instanceName)
+	computeEngineOperator, err := newGoogleComputeEngineOperator(project, zone, instanceName)
 	if err != nil {
 		panic(err)
 	}
@@ -116,7 +115,7 @@ type GoogleComputeEngineOperator struct {
 	instanceName string
 }
 
-func newGoogleComputeEngineOperator(creadentialFilePath string, project string, zone string, instanceName string) (GoogleComputeEngineOperator, error) {
+func newGoogleComputeEngineOperator(project string, zone string, instanceName string) (GoogleComputeEngineOperator, error) {
 	ctx := context.Background()
 	client, err := google.DefaultClient(ctx, compute.ComputeScope)
 	if err != nil {
