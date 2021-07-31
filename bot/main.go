@@ -23,6 +23,7 @@ func main() {
 	flag.StringVar(&zone, "zone", "", "GCP zone")
 	flag.StringVar(&instanceName, "name", "", "GCP instance name")
 	flag.StringVar(&credPath, "serviceaccount", "", "GCP service account secret path")
+	flag.Parse()
 	computeEngineOperator, err := newGoogleComputeEngineOperator(credPath, project, zone, instanceName)
 	if err != nil {
 		panic(err)
@@ -73,10 +74,10 @@ func newMinecraftServerDiscordOperator(botToken string, botClientId string, serv
 			return
 		}
 		if strings.Contains(message, "wakeup") {
-			serverOperator.start()
+			serverOperator.wakeup()
 		}
 		if strings.Contains(message, "shutdown") {
-			serverOperator.stop()
+			serverOperator.shutdown()
 		}
 	})
 	return MinecraftServerDiscordOperator{
@@ -93,8 +94,8 @@ func (msdo MinecraftServerDiscordOperator) close() error {
 }
 
 type ServerOperator interface {
-	start()
-	stop()
+	wakeup()
+	shutdown()
 }
 
 type GoogleComputeEngineOperator struct {
@@ -122,10 +123,22 @@ func newGoogleComputeEngineOperator(creadentialFilePath string, project string, 
 	}, nil
 }
 
-func (gceo GoogleComputeEngineOperator) start() {
-	fmt.Print("start server")
+func (gceo GoogleComputeEngineOperator) wakeup() {
+	fmt.Println("wake-upping server...")
+	instance, err := gceo.service.Instances.Get(gceo.project, gceo.zone, gceo.instanceName).Do()
+	if err != nil {
+		fmt.Println("failed to get instance: %v", err)
+	}
+	if instance.Status != "TERMINATED" && instance.Status != "STOPPED" && instance.Status != "SUSPENDED" {
+		return
+	}
+	_, err = gceo.service.Instances.Start(gceo.project, gceo.zone, gceo.instanceName).Do()
+	if err != nil {
+		fmt.Println("failed to start instance: %v", err)
+	}
+	fmt.Println("succeded to wake-up server!")
 }
 
-func (gceo GoogleComputeEngineOperator) stop() {
+func (gceo GoogleComputeEngineOperator) shutdown() {
 	fmt.Print("stop server")
 }
