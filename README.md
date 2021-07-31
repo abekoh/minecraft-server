@@ -35,3 +35,10 @@ curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
 sudo bash add-google-cloud-ops-agent-repo.sh --also-install
 rm add-google-cloud-ops-agent-repo.sh
 ```
+
+### Secret 設定
+
+```
+gcloud secrets create discord-bot-token --replication-policy="automatic"
+echo -n "BOT_TOKEN" | gcloud secrets versions add discord-bot-token --data-file=-
+```
