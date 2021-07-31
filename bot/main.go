@@ -1,12 +1,16 @@
 package main
 
 import (
+	"context"
+	"flag"
 	"fmt"
 	"os"
 	"regexp"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
+	"golang.org/x/oauth2/google"
+	compute "google.golang.org/api/compute/v1"
 )
 
 var (
@@ -14,7 +18,21 @@ var (
 )
 
 func main() {
-	discordOperator, err := newMinecraftServerDiscordOperator(os.Getenv("DISCORD_TOKEN"), os.Getenv("DISCORD_BOT_CLIENT_ID"), GoogleComputeEngineOperator{})
+	var project, zone, instanceName, credPath string
+	flag.StringVar(&project, "project", "", "GCP project")
+	flag.StringVar(&zone, "zone", "", "GCP zone")
+	flag.StringVar(&instanceName, "name", "", "GCP instance name")
+	flag.StringVar(&credPath, "serviceaccount", "", "GCP service account secret path")
+	computeEngineOperator, err := newGoogleComputeEngineOperator(credPath, project, zone, instanceName)
+	if err != nil {
+		panic(err)
+	}
+
+	discordOperator, err := newMinecraftServerDiscordOperator(
+		os.Getenv("DISCORD_TOKEN"),
+		os.Getenv("DISCORD_BOT_CLIENT_ID"),
+		computeEngineOperator,
+	)
 	if err != nil {
 		panic(err)
 	}
@@ -75,19 +93,39 @@ func (msdo MinecraftServerDiscordOperator) close() error {
 }
 
 type ServerOperator interface {
-	start() error
-	stop() error
+	start()
+	stop()
 }
 
 type GoogleComputeEngineOperator struct {
+	service      *compute.Service
+	project      string
+	zone         string
+	instanceName string
 }
 
-func (gceo GoogleComputeEngineOperator) start() error {
+func newGoogleComputeEngineOperator(creadentialFilePath string, project string, zone string, instanceName string) (GoogleComputeEngineOperator, error) {
+	ctx := context.Background()
+	client, err := google.DefaultClient(ctx, compute.ComputeScope)
+	if err != nil {
+		return GoogleComputeEngineOperator{}, err
+	}
+	service, err := compute.New(client)
+	if err != nil {
+		return GoogleComputeEngineOperator{}, err
+	}
+	return GoogleComputeEngineOperator{
+		service:      service,
+		project:      project,
+		zone:         zone,
+		instanceName: instanceName,
+	}, nil
+}
+
+func (gceo GoogleComputeEngineOperator) start() {
 	fmt.Print("start server")
-	return nil
 }
 
-func (gceo GoogleComputeEngineOperator) stop() error {
+func (gceo GoogleComputeEngineOperator) stop() {
 	fmt.Print("stop server")
-	return nil
 }
