@@ -52,7 +52,7 @@ resource "google_compute_instance" "vm_instance" {
 
 resource "google_compute_instance" "bot_instance" {
   name         = "minecraft-abekoh-discord-bot"
-  machine_type = "f1-micro"
+  machine_type = "e2-micro"
   zone         = "us-central1-b"
 
   boot_disk {
