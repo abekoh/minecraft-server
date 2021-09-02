@@ -37,7 +37,7 @@ resource "google_compute_firewall" "allow_minecraft" {
 }
 
 resource "google_compute_firewall" "allow_dynmap" {
-  name    = "allow-minecraft"
+  name    = "allow-dynmap"
   network = google_compute_network.vpc_network.name
   allow {
     protocol = "tcp"
