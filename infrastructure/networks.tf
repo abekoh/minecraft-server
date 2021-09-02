@@ -35,3 +35,14 @@ resource "google_compute_firewall" "allow_minecraft" {
   target_tags = ["minecraft-server"]
   priority    = 1000
 }
+
+resource "google_compute_firewall" "allow_dynmap" {
+  name    = "allow-minecraft"
+  network = google_compute_network.vpc_network.name
+  allow {
+    protocol = "tcp"
+    ports    = ["8123"]
+  }
+  target_tags = ["minecraft-server"]
+  priority    = 2000
+}
