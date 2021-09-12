@@ -11,7 +11,7 @@ chmod a+w /mnt/disks/game-data
 
 # run minecraft
 cd /mnt/disks/game-data/spigot
-screen -d -m -S minecraft java -Xmx2048M -Xms2048M -jar spigot-1.17.1.jar nogui
+screen -d -m -S minecraft java -Xmx3072M -Xms3072M -jar spigot-1.17.1.jar nogui
 
 # backup cron
 backup_script=/etc/cron.weekly/backup-spigot.sh
