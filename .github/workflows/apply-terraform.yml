@@ -1,8 +1,13 @@
 name: apply Terraform
 on:
-  push:
+  workflow_run:
+    workflows:
+      - "upload bot app with go-build"
+      - "upload scripts to Google Cloud Storage"
     branches:
       - main
+    types:
+      - completed
 defaults:
   run:
     working-directory: "infrastructure"
