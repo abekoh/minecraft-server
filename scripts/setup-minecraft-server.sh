@@ -2,7 +2,7 @@
 
 # install dependencies
 apt-get update
-apt-get install -y openjdk-16-jre-headless
+apt-get install -y openjdk-17-jre-headless
 
 # setup permenent disk
 mkdir -p /mnt/disks/game-data
